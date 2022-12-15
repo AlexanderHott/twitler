@@ -1,13 +1,15 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 
-import { trpc } from "../utils/trpc";
-import Image from "next/image";
+import Timeline from "../components/Timeline";
 
 const Home: NextPage = () => {
-  const { data: session } = useSession();
+  const { status } = useSession();
+  if (status === "loading") {
+    return null;
+  }
+
   return (
     <>
       <Head>
@@ -16,24 +18,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div>
-        <pre>{JSON.stringify(session)}</pre>
-        {/* create a image with the users profile picture */}
-        <Image
-          src={session?.user?.image || ""}
-          width={40}
-          height={40}
-          alt="profile picture"
-        />
-        {/* create a link to the users profile */}
-        <Link href={session?.user?.name || ""}>{session?.user?.name}</Link>
-        <button
-          className="text-bold rounded bg-purple-600 p-4 font-bold text-white"
-          onClick={() => signIn("discord")}
-        >
-          Sign in with discord
-        </button>
-      </div>
+      <div>{status === "authenticated" && <Timeline />}</div>
     </>
   );
 };
