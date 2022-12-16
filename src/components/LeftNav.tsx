@@ -28,7 +28,7 @@ const LeftNav = () => {
   const session = useSession();
 
   return (
-    <div className="pl-36 text-white">
+    <div className="pl-36 pt-4 text-white">
       <div className="sticky top-0 flex flex-col items-center ">
         <div className="mb-8 justify-between text-3xl">Twitler</div>
         <nav className="flex flex-col gap-6 ">

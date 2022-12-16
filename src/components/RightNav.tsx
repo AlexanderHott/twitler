@@ -1,68 +1,28 @@
-import { signOut, useSession } from "next-auth/react";
-import Link from "next/link";
-import type { FC, ReactNode } from "react";
-import {
-  FaHome,
-  FaHashtag,
-  FaBell,
-  FaEnvelope,
-  FaBookmark,
-  FaUser,
-  FaExpand,
-} from "react-icons/fa";
-
-const NavItem: FC<{ icon: ReactNode; text: string; href: string }> = ({
-  icon,
-  text,
-  href,
-}) => {
-  return (
-    <Link href={href} className="align-center flex items-center gap-4">
-      <div>{icon}</div>
-      <span className="text-xl">{text}</span>
-    </Link>
-  );
-};
-
 const RightNav = () => {
-  const session = useSession();
-
   return (
-    <div className="pr-36 text-white">
-      <div className="flex flex-col items-center">
-        <nav>
-          <NavItem icon={<FaHome size={24} />} href="/" text="Home" />
-          <NavItem
-            icon={<FaHashtag size={24} />}
-            href="explore"
-            text="Explore"
-          />
-          <NavItem
-            icon={<FaBell size={24} />}
-            href="notifications"
-            text="Notifications"
-          />
-          <NavItem
-            icon={<FaEnvelope size={24} />}
-            href="messages"
-            text="Messages"
-          />
-          <NavItem
-            icon={<FaBookmark size={24} />}
-            href="bookmarks"
-            text="Bookmarks"
-          />
-          <NavItem icon={<FaUser size={24} />} href="profile" text="Profile" />
-          <NavItem icon={<FaExpand size={24} />} href="/" text="More" />
-        </nav>
-        {session.data && (
-          <button
-            onClick={() => signOut()}
-            className="rounded-3xl bg-gray-400 px-4 py-2 text-white hover:bg-gray-700"
-          >
-            Log Out
-          </button>
-        )}
+    <div>
+      <div className="sticky top-0 flex flex-col gap-4 pr-36 pt-4 text-white">
+        <input
+          placeholder="Search Twitler"
+          className="rounded-3xl border border-[#2F3336]  bg-[#202327] p-2 text-white outline-1"
+        />
+        <div className=" flex flex-col gap-4 rounded-xl bg-[#202327] p-8">
+          <h2 className="pb-4 text-xl font-bold">What&apos;s happening</h2>
+          <div>
+            <h3 className="text-xs text-gray-500">Sports · LIVE</h3>
+            <span className="font-bold">2022 FIFA World Cup</span>
+          </div>
+          <div>
+            <h3 className="text-xs text-gray-500">Trending in United States</h3>
+            <span className="font-bold">2022 International Bingus Day</span>
+          </div>
+          <div>
+            <h3 className="text-xs text-gray-500">
+              Music streaming service · Trending
+            </h3>
+            <span className="font-bold">Spotify</span>
+          </div>
+        </div>
       </div>
     </div>
   );
