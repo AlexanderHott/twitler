@@ -1,7 +1,7 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider, useSession } from "next-auth/react";
-import { ReactQueryDevtools } from "@tanstack/react-query-dev-tools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { Container } from "../components/Container";
 
@@ -15,16 +15,15 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <ReactQueryDevtools>
-      <SessionProvider session={session}>
-        <Container>
-          <main>
-            <Component {...pageProps} />
-          </main>
-        </Container>
-        {!session && <LoggedOutBanner />}
-      </SessionProvider>
-    </ReactQueryDevtools>
+    <SessionProvider session={session}>
+      <Container>
+        <main>
+          <Component {...pageProps} />
+        </main>
+      </Container>
+      {!session && <LoggedOutBanner />}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </SessionProvider>
   );
 };
 

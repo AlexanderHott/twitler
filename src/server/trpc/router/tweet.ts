@@ -32,6 +32,7 @@ export const tweetRouter = router({
         include: {
           author: { select: { image: true, name: true, id: true } },
           likes: { where: { userId }, select: { id: true } },
+          _count: { select: { likes: true } },
         },
         cursor: input.cursor ? { id: input.cursor } : undefined,
         // skip: input.cursor ? 1 : 0,
@@ -48,7 +49,7 @@ export const tweetRouter = router({
     .input(z.object({ tweetId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      await ctx.prisma.like.create({
+      return ctx.prisma.like.create({
         data: {
           tweet: { connect: { id: input.tweetId } },
           user: { connect: { id: userId } },
@@ -59,7 +60,7 @@ export const tweetRouter = router({
     .input(z.object({ tweetId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      await ctx.prisma.like.delete({
+      return ctx.prisma.like.delete({
         where: { tweetId_userId: { tweetId: input.tweetId, userId } },
       });
     }),

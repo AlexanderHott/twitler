@@ -6,7 +6,13 @@ const CreateTweetForm = () => {
   const [text, setText] = useState("");
   const [error, setError] = useState("");
 
-  const createTweet = trpc.tweet.create.useMutation();
+  const utils = trpc.useContext();
+  const createTweet = trpc.tweet.create.useMutation({
+    onSuccess: () => {
+      setText("");
+      utils.tweet.timeline.invalidate();
+    },
+  });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
