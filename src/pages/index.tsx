@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 import Timeline from "../components/Timeline";
 
@@ -18,7 +18,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div>{status === "authenticated" && <Timeline />}</div>
+      <div>
+        <Timeline />
+      </div>
     </>
   );
 };

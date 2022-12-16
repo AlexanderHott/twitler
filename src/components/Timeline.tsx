@@ -171,7 +171,7 @@ const Tweet: React.FC<{
                 await likeMutation({ tweetId: tweet.id });
               }
             }}
-            className="cursor-pointer"
+            className="cursor-pointer "
           />
           <span className="text-sm text-gray-500">{tweet._count.likes}</span>
         </div>
@@ -186,7 +186,7 @@ const Tweet: React.FC<{
 };
 
 const Timeline: NextPage<{
-  where: RouterInputs["tweet"]["timeline"]["where"];
+  where?: RouterInputs["tweet"]["timeline"]["where"];
 }> = ({ where = {} }) => {
   // infinite scrolling
   const scrollPosition = useScrollPosition();

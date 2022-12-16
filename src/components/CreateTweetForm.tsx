@@ -19,6 +19,8 @@ const CreateTweetForm = () => {
 
   const utils = trpc.useContext();
   const createTweet = trpc.tweet.create.useMutation({
+    // refetch all tweets when you create a tweet
+    // TODO: optimistic updates
     onSuccess: () => {
       setText("");
       utils.tweet.timeline.invalidate();
@@ -33,9 +35,7 @@ const CreateTweetForm = () => {
       return;
     }
 
-    console.log("create tweet", text);
-
-    return createTweet.mutateAsync({ text });
+    return await createTweet.mutateAsync({ text });
   };
 
   return (
@@ -55,6 +55,7 @@ const CreateTweetForm = () => {
           value={text}
           onChange={(e) => {
             setText(e.target.value);
+            // auto grow height
             e.target.style.height = "inherit";
             e.target.style.height = `${e.target.scrollHeight}px`;
           }}
