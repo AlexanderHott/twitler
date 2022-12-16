@@ -20,25 +20,30 @@ export const tweetRouter = router({
   timeline: publicProcedure
     .input(
       z.object({
+        where: z
+          .object({
+            author: z.object({ name: z.string().optional() }).optional(),
+          })
+          .optional(),
         cursor: z.string().optional(),
         limit: z.number().min(1).max(100).default(10),
       })
     )
     .query(async ({ ctx, input }) => {
       const userId = ctx.session?.user?.id;
+      const { where, limit, cursor } = input;
       const tweets = await ctx.prisma.tweet.findMany({
-        take: input.limit + 1, // for cursor calculation
+        where,
+        take: limit + 1, // for cursor calculation
         orderBy: [{ createdAt: "desc" }],
         include: {
           author: { select: { image: true, name: true, id: true } },
           likes: { where: { userId }, select: { id: true } },
           _count: { select: { likes: true } },
         },
-        cursor: input.cursor ? { id: input.cursor } : undefined,
-        // skip: input.cursor ? 1 : 0,
-        // cursor: input.cursor ? { id: input.cursor } : undefined,
+        cursor: cursor ? { id: cursor } : undefined,
       });
-      let nextCursor: typeof input.cursor | undefined = undefined;
+      let nextCursor: typeof cursor | undefined = undefined;
       if (tweets.length > input.limit) {
         const nextItem = tweets.pop() as typeof tweets[number];
         nextCursor = nextItem.id;
