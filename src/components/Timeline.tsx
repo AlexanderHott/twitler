@@ -6,7 +6,13 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
-import { AiFillHeart } from "react-icons/ai";
+import {
+  AiFillHeart,
+  AiOutlineRetweet,
+  AiOutlineComment,
+  AiOutlineShareAlt,
+  AiOutlineDollar,
+} from "react-icons/ai";
 import {
   type InfiniteData,
   useQueryClient,
@@ -123,45 +129,57 @@ const Tweet: React.FC<{
   }).mutateAsync;
   const hasLiked = tweet.likes.length > 0; // we only select our own likes from the db
   console.log("hasLiked", hasLiked);
-  return (
-    <div className="mb-4 border-b-2 border-gray-500">
-      <div className="flex p-2">
-        {tweet.author.image && (
-          <Image
-            src={tweet.author.image}
-            alt={`${tweet.author.name} profile picture`}
-            width={48}
-            height={48}
-            className="rounded-full"
-          />
-        )}
 
-        <div className="ml-2">
-          <div className="flex items-center">
-            <p className="font-bold">
+  return (
+    <div className="mb-4 flex flex-col border-b border-[#2F3336]">
+      <div className="flex p-2">
+        <div className="min-w-max">
+          {tweet.author.image && (
+            <Image
+              src={tweet.author.image}
+              alt={`${tweet.author.name} profile picture`}
+              width={48}
+              height={48}
+              className="rounded-full"
+            />
+          )}
+        </div>
+        <div className="ml-2 flex min-w-0 flex-col overflow-ellipsis">
+          <div className="flex items-center ">
+            <p className="font-bold text-white">
               <Link href={`/${tweet.author.name}`}>{tweet.author.name}</Link>
             </p>
             <p className="pl-1 text-xs text-gray-500">
-              - {dayjs(tweet.createdAt).fromNow()}
+              · {dayjs(tweet.createdAt).fromNow()}
             </p>
           </div>
-
-          <div>{tweet.text}</div>
+          <div>
+            <p className=" break-words  text-white">{tweet.text}</p>
+          </div>
         </div>
       </div>
-      <div className="mt-4 flex items-center p-2">
-        <AiFillHeart
-          color={hasLiked ? "red" : "black"}
-          size="1.5rem"
-          onClick={async () => {
-            if (hasLiked) {
-              await unlikeMutation({ tweetId: tweet.id });
-            } else {
-              await likeMutation({ tweetId: tweet.id });
-            }
-          }}
-        />
-        <span className="text-sm text-gray-500">{tweet._count.likes}</span>
+
+      <div className="mt-4 flex items-center justify-evenly p-2">
+        <div className="flex flex-row items-center gap-1">
+          <AiFillHeart
+            color={hasLiked ? "red" : "gray"}
+            size="1.5rem"
+            onClick={async () => {
+              if (hasLiked) {
+                await unlikeMutation({ tweetId: tweet.id });
+              } else {
+                await likeMutation({ tweetId: tweet.id });
+              }
+            }}
+            className="cursor-pointer"
+          />
+          <span className="text-sm text-gray-500">{tweet._count.likes}</span>
+        </div>
+
+        <AiOutlineRetweet size="1.5rem" color="gray" />
+        <AiOutlineComment size="1.5rem" color="gray" />
+        <AiOutlineShareAlt size="1.5rem" color="gray" />
+        <AiOutlineDollar size="1.5rem" color="gray" />
       </div>
     </div>
   );
@@ -190,8 +208,9 @@ const Timeline: NextPage<{
   const tweets = data?.pages.flatMap((page) => page.tweets);
   return (
     <div>
+      <h1 className="ml-2 mb-4 text-2xl font-bold text-white">Home</h1>
       <CreateTweetForm />
-      <ul className="border-l-2 border-r-2 border-t-2 border-gray-500">
+      <ul>
         {tweets?.map((tweet) => (
           <Tweet
             tweet={tweet}
@@ -201,7 +220,11 @@ const Timeline: NextPage<{
           />
         ))}
       </ul>
-      {!hasNextPage && <p>No more items to load</p>}
+      {!hasNextPage && (
+        <p className="pb-2 text-center text-gray-500 ">
+          No more items to load. <b>Go outside</b>
+        </p>
+      )}
     </div>
   );
 };

@@ -16,12 +16,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Container>
-        <main>
-          <Component {...pageProps} />
-        </main>
-      </Container>
-      {!session && <LoggedOutBanner />}
+      <div className="bg-black">
+        <Container>
+          <main>
+            <Component {...pageProps} />
+          </main>
+        </Container>
+        {!session && <LoggedOutBanner />}
+      </div>
       <ReactQueryDevtools initialIsOpen={false} />
     </SessionProvider>
   );
