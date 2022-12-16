@@ -6,7 +6,7 @@ const UserPage = () => {
   const name = router.query.name as string;
   return (
     <div>
-      <Timeline where={{ author: { name } }} />
+      <Timeline where={{ author: { name } }} hideCreateForm title={name} />
     </div>
   );
 };

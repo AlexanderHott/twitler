@@ -19,7 +19,7 @@ const Home: NextPage = () => {
       </Head>
 
       <div>
-        <Timeline />
+        <Timeline title="Home" />
       </div>
     </>
   );

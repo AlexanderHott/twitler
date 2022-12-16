@@ -53,7 +53,13 @@ const LeftNav = () => {
             href="bookmarks"
             text="Bookmarks"
           />
-          <NavItem icon={<FaUser size={24} />} href="profile" text="Profile" />
+          {session?.data?.user?.name && (
+            <NavItem
+              icon={<FaUser size={24} />}
+              href={session?.data?.user?.name}
+              text="Profile"
+            />
+          )}
           <NavItem icon={<FaExpand size={24} />} href="/" text="More" />
         </nav>
         {session.data && (

@@ -19,13 +19,13 @@ import {
   type QueryClient,
 } from "@tanstack/react-query";
 import { type NextPage } from "next";
+import { useSession } from "next-auth/react";
 
 type Tweet = RouterOutputs["tweet"]["timeline"]["tweets"][number];
 
 const FETCH_LIMIT = 10;
 
-// adds `.fromNow()` and updateLocale to dayjs
-dayjs.extend(relativeTime);
+dayjs.extend(relativeTime); // adds `.fromNow()` and updateLocale to dayjs
 dayjs.extend(updateLocale);
 
 // https://day.js.org/docs/en/customization/relative-time
@@ -47,6 +47,8 @@ dayjs.updateLocale("en", {
   },
 });
 
+/**  Returns the current scroll position as a percentage of the scrollable area.
+ */
 const useScrollPosition = () => {
   const [scrollPosition, setScrollPosition] = React.useState(0);
 
@@ -72,6 +74,15 @@ const useScrollPosition = () => {
   return scrollPosition;
 };
 
+/** Updates trpc's queryClient cache with new data.
+ *
+ * We need to match the query key exactly, so there are a lot of extra arguments.
+ * @param queryClient trpc's queryClient
+ * @param variables variables for the mutation
+ * @param data the data to add if the user likes a tweet
+ * @param input the input for the query
+ * @param action the action that was performed
+ */
 const updateCache = ({
   queryClient,
   variables,
@@ -128,7 +139,6 @@ const Tweet: React.FC<{
     },
   }).mutateAsync;
   const hasLiked = tweet.likes.length > 0; // we only select our own likes from the db
-  console.log("hasLiked", hasLiked);
 
   return (
     <div className="mb-4 flex flex-col border-b border-[#2F3336]">
@@ -187,7 +197,10 @@ const Tweet: React.FC<{
 
 const Timeline: NextPage<{
   where?: RouterInputs["tweet"]["timeline"]["where"];
-}> = ({ where = {} }) => {
+  hideCreateForm?: boolean;
+  title: string;
+}> = ({ where = {}, hideCreateForm, title }) => {
+  const session = useSession();
   // infinite scrolling
   const scrollPosition = useScrollPosition();
   const { data, hasNextPage, fetchNextPage, isFetching } =
@@ -208,8 +221,10 @@ const Timeline: NextPage<{
   const tweets = data?.pages.flatMap((page) => page.tweets);
   return (
     <div>
-      <h1 className="ml-2 mb-4 text-2xl font-bold text-white">Home</h1>
-      <CreateTweetForm />
+      <h1 className="ml-2 mb-4 text-2xl font-bold text-white">{title}</h1>
+      {session.status === "authenticated" && !hideCreateForm && (
+        <CreateTweetForm />
+      )}
       <ul>
         {tweets?.map((tweet) => (
           <Tweet

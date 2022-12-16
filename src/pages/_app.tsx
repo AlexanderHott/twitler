@@ -1,6 +1,6 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
-import { SessionProvider, useSession } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { Container } from "../components/Container";
@@ -8,7 +8,7 @@ import { Container } from "../components/Container";
 import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
-import { LoggedOutBanner } from "../components/LoggedOutBanner";
+import { LoggedOutBanner as SignInBanner } from "../components/SignInBanner";
 import LeftNav from "../components/LeftNav";
 import RightNav from "../components/RightNav";
 
@@ -28,7 +28,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           </Container>
           <RightNav />
         </div>
-        {!session && <LoggedOutBanner />}
+        {!session && <SignInBanner />}
       </div>
       <ReactQueryDevtools initialIsOpen={false} />
     </SessionProvider>
