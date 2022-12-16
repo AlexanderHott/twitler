@@ -1,5 +1,14 @@
 # Twitler
 
+- [Twitler](#twitler)
+  - [Quickstart](#quickstart)
+  - [Code Points of Interest](#code-points-of-interest)
+    - [Infinite Scroll](#infinite-scroll)
+    - [Updating the QueryClient's cache](#updating-the-queryclients-cache)
+  - [TODO](#todo)
+
+---
+
 A Twitter clone written with the [T3 Stack](https://create.t3.gg/).
 
 No account view
